@@ -26,11 +26,11 @@ namespace WhiteLagoon.Web.Controllers
         public IActionResult Create(Villa villa)
         {
 
-            if(villa.Name == villa.Description)
+            if (villa.Name == villa.Description)
             {
                 ModelState.AddModelError("", "The description cannot exactly match the Name.");
             }
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 this.dbContext.Villas.Add(villa);
                 this.dbContext.SaveChanges();
@@ -39,6 +39,59 @@ namespace WhiteLagoon.Web.Controllers
             }
 
             return View(villa);
+        }
+
+        public IActionResult Update(int villaId)
+        {
+            Villa? obj = this.dbContext.Villas.FirstOrDefault(x => x.Id == villaId);
+            if (obj == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        public IActionResult Update(Villa villa)
+        {
+
+            if (ModelState.IsValid && villa.Id > 0)
+            {
+                this.dbContext.Villas.Update(villa);
+                this.dbContext.SaveChanges();
+
+                return RedirectToAction("Index", "Villa");
+            }
+
+            return View();
+        }
+
+        public IActionResult Delete(int villaId)
+        {
+            Villa? obj = this.dbContext.Villas.FirstOrDefault(x => x.Id == villaId);
+            if (obj == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Villa villa)
+        {
+            Villa? objFromDb = this.dbContext.Villas.FirstOrDefault(u => u.Id == villa.Id);
+             
+            if (objFromDb != null)
+            {
+                this.dbContext.Villas.Remove(objFromDb);
+                this.dbContext.SaveChanges();
+
+                return RedirectToAction("Index", "Villa");
+            }
+
+            return View();
         }
     }
 }

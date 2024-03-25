@@ -27,7 +27,7 @@ namespace WhiteLagoon.Infrastructure.Repository
 
         public void Update(Villa villa)
         {
-            this.dbContext.Update(villa);
+            this.dbContext.Villas.Update(villa);
         }
     }
 }

@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\images\NewFolder1\**" />
+    <Content Remove="wwwroot\images\NewFolder1\**" />
+    <EmbeddedResource Remove="wwwroot\images\NewFolder1\**" />
+    <None Remove="wwwroot\images\NewFolder1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -16,6 +23,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WhiteLagoon.Infrastructure\WhiteLagoon.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\VillaImage\" />
   </ItemGroup>
 
 </Project>

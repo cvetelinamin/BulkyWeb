@@ -74,6 +74,29 @@ namespace WhiteLagoon.Web.Controllers
         [HttpPost]
         public IActionResult Update(Villa villa)
         {
+            if (villa.Image != null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(villa.Image.FileName);
+                string imagePath = Path.Combine(webHostEnvironment.WebRootPath, @"images\VillaImage");
+
+                if(!string.IsNullOrEmpty(villa.ImageUrl))
+                {
+                    var oldImage = Path.Combine(this.webHostEnvironment.WebRootPath, villa.ImageUrl.TrimStart('\\'));
+
+                    if(System.IO.File.Exists(oldImage))
+                    {
+                        System.IO.File.Delete(oldImage);
+                    }
+                }
+
+                using (var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create))
+                {
+                    villa.Image.CopyTo(fileStream);
+                }
+
+                villa.ImageUrl = @"\images\VillaImage\" + fileName;
+            }
+            
 
             if (ModelState.IsValid && villa.Id > 0)
             {
@@ -104,6 +127,17 @@ namespace WhiteLagoon.Web.Controllers
              
             if (objFromDb != null)
             {
+
+                if (!string.IsNullOrEmpty(objFromDb.ImageUrl))
+                {
+                    var oldImage = Path.Combine(this.webHostEnvironment.WebRootPath, objFromDb.ImageUrl.TrimStart('\\'));
+
+                    if (System.IO.File.Exists(oldImage))
+                    {
+                        System.IO.File.Delete(oldImage);
+                    }
+                }
+
                 this.unitOfWork.Villa.Remove(objFromDb);
                 this.unitOfWork.Villa.Save();
                 TempData["success"] = "The villa has been deleted successfully.";

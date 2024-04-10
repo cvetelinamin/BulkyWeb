@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using WhiteLagoon.Application.Common.Interfaces;
 using WhiteLagoon.Application.Common.Utility;
 using WhiteLagoon.Domain.Entities;
@@ -31,6 +32,34 @@ namespace WhiteLagoon.Web.Controllers
             {
                 RedirectUrl = returnUrl,
             };
+            return View(loginVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginVM loginVM)
+        {
+            if(ModelState.IsValid)
+            {
+                var result = await this.signInManager.PasswordSignInAsync(loginVM.Email, loginVM.Password, loginVM.RememberMe,lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    if (string.IsNullOrEmpty(loginVM.RedirectUrl))
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return LocalRedirect(loginVM.RedirectUrl);
+                    }
+
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid login attemp.");
+                }
+            }          
+
             return View(loginVM);
         }
 

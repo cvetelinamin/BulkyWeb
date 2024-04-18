@@ -12,8 +12,10 @@ namespace WhiteLagoon.Infrastructure.Repository
     {
         private readonly ApplicationDbContext dbContext;
         public IVillaRepository Villa{get; private set;}
-        public IVillaNumberRepository VillaNumber { get; set; }
-        public IAmenityRepository Amenity { get; set; }
+        public IVillaNumberRepository VillaNumber { get; private set; }
+        public IAmenityRepository Amenity { get; private set; }
+
+        public IBookingRepository Booking { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -21,6 +23,7 @@ namespace WhiteLagoon.Infrastructure.Repository
             Villa = new VillaRepository(db);
             VillaNumber = new VillaNumberRepository(db);
             Amenity = new AmenityRepository(db);
+            Booking = new BookingRepository(db);
         }
 
         public void Save()
